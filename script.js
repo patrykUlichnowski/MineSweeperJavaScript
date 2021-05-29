@@ -83,6 +83,23 @@ function sprawdzSasiadow() {
                 }
                 if (ileBomb > 0) {
                     kafelki[i].innerHTML = ileBomb;
+                    switch(ileBomb){
+                    case 1:
+                        kafelki[i].style.color="blue";
+                        break;    
+                    case 2:
+                        kafelki[i].style.color="green";
+                        break;    
+                    case 3:
+                        kafelki[i].style.color="red";
+                        break;    
+                    case 4:
+                        kafelki[i].style.color="purple";
+                        break;    
+                    case 5:
+                        kafelki[i].style.color="orange";
+                        break;
+                    }
                 }
                 else {
                     continue
