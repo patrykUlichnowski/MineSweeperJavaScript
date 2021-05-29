@@ -1,15 +1,20 @@
 let kafelki = document.querySelectorAll('#square')
 let dlugosc = kafelki.length;
+//bombs ma indeksy kafelek z bombami
 let bombs = new Array();
 let ilosc = 0;
 function dodajListenery() {
     //let kafelki = document.querySelectorAll('#square')
     for (var i = 0; i < kafelki.length; i++) {
-        kafelki[i].addEventListener("click", createBombs)
+        createBombs();
+        //kafelki[i].identyfikator = i;
+        kafelki[i].addEventListener("click", kliknijKafelek)
     }
 }
+function kliknijKafelek() {
+    console.log(kafelki)
+}
 function createBombs() {
-    //bombs ma indeksy kafelek z bombami
     //let bombs = new Array();
     //let ilosc = 0;
     // petla losujaca pozycje bomb
@@ -36,17 +41,18 @@ function createBombs() {
         }
     }
     // petla nanoszaca grafiki
-    narysujBomby();
+    drawBomby();
     // petla liczaca ile ma bomb jako sasiadow
     sprawdzSasiadow();
 }
-function narysujBomby() {
+function drawBomby() {
     for (let i = 0; i < bombs.length; i++) {
         let wartosc = bombs[i];
         kafelki[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
 }
 function sprawdzSasiadow() {
+    // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     for (let i = 0; i <= dlugosc; i++) {
         let nalezyDoBomb = false;
         for (let j = 0; j < bombs.length; j++) {
@@ -83,6 +89,23 @@ function sprawdzSasiadow() {
                 }
                 if (ileBomb > 0) {
                     kafelki[i].innerHTML = ileBomb;
+                    switch (ileBomb) {
+                        case 1:
+                            kafelki[i].style.color = "blue";
+                            break;
+                        case 2:
+                            kafelki[i].style.color = "green";
+                            break;
+                        case 3:
+                            kafelki[i].style.color = "red";
+                            break;
+                        case 4:
+                            kafelki[i].style.color = "purple";
+                            break;
+                        case 5:
+                            kafelki[i].style.color = "orange";
+                            break;
+                    }
                 }
                 else {
                     continue
