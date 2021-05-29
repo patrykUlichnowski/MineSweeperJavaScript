@@ -1,0 +1,20 @@
+body{
+    background-color: rgb(0, 0, 116);
+    color: white;
+}
+.kafelek{
+    float: left;
+    background-color: rgb(187, 183, 183);
+    width: 60px;
+    height: 60px;
+    margin: 2px;
+    color:black;
+    text-align: center;
+    font-size: 30px;
+    display:flex;
+    justify-content: center; 
+    align-items: center;
+}
+.rzad{
+    clear: both;
+}
