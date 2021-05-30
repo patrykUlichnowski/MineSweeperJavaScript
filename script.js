@@ -1,3 +1,8 @@
+/* 
+
+    AKTUALNIE sprawdzSasiadow2() oraz drawBomby() nic nie robia ale zostaly narazie w kodzie jakby co
+
+*/
 let kafelki = document.querySelectorAll('#square')
 let dlugosc = kafelki.length;
 //bombs ma indeksy kafelek z bombami
@@ -332,5 +337,5 @@ function sprawdzPuste(parametr) {
 }
 function flag() {
     var ktory = event.target.identyfikator;
-    kafelki[ktory].style.backgroundColor = "red";
+    kafelki[ktory].innerHTML = "<img src=\"grafika/flaga.png\">";
 }
