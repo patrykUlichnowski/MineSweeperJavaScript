@@ -6,20 +6,114 @@ let ilosc = 0;
 function dodajListenery() {
     //let kafelki = document.querySelectorAll('#square')
     for (var i = 0; i < kafelki.length; i++) {
-        createBombs();
-        //kafelki[i].identyfikator = i;
-        kafelki[i].addEventListener("click", kliknijKafelek)
+        kafelki[i].addEventListener("click", kliknijKafelek);
+        kafelki[i].identyfikator = i;
+        //createBombs();
     }
 }
 function kliknijKafelek() {
-    console.log(kafelki)
+    //console.log(event.target.identyfikator)
+    var ktory = event.target.identyfikator
+    kafelki[ktory].style.backgroundColor = "grey";
+    createBombs(event.target.identyfikator);
+    sprawdzSasiadow2(event.target.identyfikator);
 }
-function createBombs() {
+function createBombs(parametr) {
+    let ktory = Number(parametr);
     //let bombs = new Array();
     //let ilosc = 0;
     // petla losujaca pozycje bomb
     while (bombs.length < 15) {
         let losowa = Math.floor(Math.random() * dlugosc)
+        //lewa czesc
+        if (ktory == 0 || ktory == 10 || ktory == 20 || ktory == 30 || ktory == 40
+            || ktory == 50 || ktory == 60 || ktory == 70 || ktory == 80 || ktory == 90) {
+            if (losowa != ktory && losowa != ktory + 1 && losowa != ktory - 10
+                && losowa != ktory - 9 && losowa != ktory + 10 && losowa != ktory + 11) {
+                let powtorzenie = false;
+                if (ilosc == 0) {
+                    bombs[ilosc] = losowa;
+                    ilosc += 1;
+                }
+                else {
+                    for (var j = 0; j < bombs.length; j++) {
+                        if (Number(bombs[j]) == Number(losowa)) {
+                            powtorzenie = true;
+                        }
+                    }
+                    if (powtorzenie == true) {
+                        continue
+                    }
+                    else {
+                        bombs[ilosc] = losowa;
+                        ilosc += 1;
+                    }
+                }
+            }
+            else {
+                continue;
+            }
+        }
+        //prawa czesc
+        else {
+            if (ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 ||
+                ktory == 59 || ktory == 69 || ktory == 79 || ktory == 89 || ktory == 99) {
+                if (losowa != ktory && losowa != ktory - 1 && losowa != ktory - 10
+                    && losowa != ktory - 11 && losowa != ktory + 10 && losowa != ktory + 9) {
+                    let powtorzenie = false;
+                    if (ilosc == 0) {
+                        bombs[ilosc] = losowa;
+                        ilosc += 1;
+                    }
+                    else {
+                        for (var j = 0; j < bombs.length; j++) {
+                            if (Number(bombs[j]) == Number(losowa)) {
+                                powtorzenie = true;
+                            }
+                        }
+                        if (powtorzenie == true) {
+                            continue
+                        }
+                        else {
+                            bombs[ilosc] = losowa;
+                            ilosc += 1;
+                        }
+                    }
+                }
+                else {
+                    continue;
+                }
+            }
+            // reszta przypadkow
+            else {
+                if (losowa != ktory && losowa != ktory - 1 && losowa != ktory + 1 && losowa != ktory - 10 && losowa != ktory - 9
+                    && losowa != ktory - 11 && losowa != ktory + 10 && losowa != ktory + 9 && losowa != ktory + 11) {
+                    let powtorzenie = false;
+                    if (ilosc == 0) {
+                        bombs[ilosc] = losowa;
+                        ilosc += 1;
+                    }
+                    else {
+                        for (var j = 0; j < bombs.length; j++) {
+                            if (Number(bombs[j]) == Number(losowa)) {
+                                powtorzenie = true;
+                            }
+                        }
+                        if (powtorzenie == true) {
+                            continue
+                        }
+                        else {
+                            bombs[ilosc] = losowa;
+                            ilosc += 1;
+                        }
+                    }
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+        /*
         let powtorzenie = false;
         if (ilosc == 0) {
             bombs[ilosc] = losowa;
@@ -39,11 +133,10 @@ function createBombs() {
                 ilosc += 1;
             }
         }
+        */
     }
     // petla nanoszaca grafiki
-    drawBomby();
-    // petla liczaca ile ma bomb jako sasiadow
-    sprawdzSasiadow();
+    //drawBomby();
 }
 function drawBomby() {
     for (let i = 0; i < bombs.length; i++) {
@@ -51,8 +144,9 @@ function drawBomby() {
         kafelki[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
 }
-function sprawdzSasiadow() {
+function sprawdzSasiadow(parametr) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
+    //console.log(parametr)
     for (let i = 0; i <= dlugosc; i++) {
         let nalezyDoBomb = false;
         for (let j = 0; j < bombs.length; j++) {
@@ -112,5 +206,71 @@ function sprawdzSasiadow() {
                 }
             }
         }
+    }
+}
+function sprawdzSasiadow2(parametr) {
+    // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
+    var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
+    console.log(sprawdzany);
+    let nalezyDoBomb = false
+    for (let j = 0; j < bombs.length; j++) {
+        if (sprawdzany == bombs[j]) {
+            nalezyDoBomb = true;
+        }
+        else {
+            continue;
+        }
+    }
+    if (nalezyDoBomb == false) {
+        let ileBomb = 0
+        for (let j = 0; j < bombs.length; j++) {
+            //lewa ścsprawdzanyana
+            if (sprawdzany == 0 || sprawdzany == 10 || sprawdzany == 20 || sprawdzany == 30 || sprawdzany == 40 || sprawdzany == 50 || sprawdzany == 60 || sprawdzany == 70 || sprawdzany == 80 || sprawdzany == 90) {
+                if (sprawdzany - 10 == bombs[j] || sprawdzany - 9 == bombs[j] || sprawdzany + 1 == bombs[j] || sprawdzany + 10 == bombs[j] || sprawdzany + 11 == bombs[j]) {
+                    ileBomb += 1;
+                }
+            }
+            else {
+                // prawa ścsprawdzanyana
+                if (sprawdzany == 9 || sprawdzany == 19 || sprawdzany == 29 || sprawdzany == 39 || sprawdzany == 49 || sprawdzany == 59 || sprawdzany == 69 || sprawdzany == 79 || sprawdzany == 89 || sprawdzany == 99) {
+                    if (sprawdzany - 11 == bombs[j] || sprawdzany - 10 == bombs[j] || sprawdzany - 1 == bombs[j] || sprawdzany + 9 == bombs[j] || sprawdzany + 10 == bombs[j]) {
+                        ileBomb += 1;
+                    }
+                }
+                //reszta
+                else {
+                    if (sprawdzany - 11 == bombs[j] || sprawdzany - 10 == bombs[j] || sprawdzany - 9 == bombs[j] || sprawdzany - 1 == bombs[j] ||
+                        sprawdzany + 1 == bombs[j] || sprawdzany + 9 == bombs[j] || sprawdzany + 10 == bombs[j] || sprawdzany + 11 == bombs[j]) {
+                        ileBomb += 1;
+                    }
+                }
+            }
+            if (ileBomb > 0) {
+                kafelki[sprawdzany].innerHTML = ileBomb;
+                switch (ileBomb) {
+                    case 1:
+                        kafelki[sprawdzany].style.color = "blue";
+                        break;
+                    case 2:
+                        kafelki[sprawdzany].style.color = "green";
+                        break;
+                    case 3:
+                        kafelki[sprawdzany].style.color = "red";
+                        break;
+                    case 4:
+                        kafelki[sprawdzany].style.color = "purple";
+                        break;
+                    case 5:
+                        kafelki[sprawdzany].style.color = "orange";
+                        break;
+                }
+            }
+            else {
+                continue
+            }
+        }
+    }
+    else {
+        kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
 }
