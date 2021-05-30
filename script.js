@@ -5,27 +5,25 @@ let bombs = new Array();
 let ilosc = 0;
 let BombsLeft = 15;
 function dodajListenery() {
-    //let kafelki = document.querySelectorAll('#square')
     for (var i = 0; i < kafelki.length; i++) {
         document.getElementById('ilebomb').innerHTML = 'Bombs left: ' + String(BombsLeft);
         kafelki[i].addEventListener("click", kliknijKafelek);
         kafelki[i].addEventListener("contextmenu", flag);
         kafelki[i].identyfikator = i;
-        //createBombs();
     }
 }
 function kliknijKafelek() {
-    //console.log(event.target.identyfikator)
     var ktory = event.target.identyfikator
     kafelki[ktory].style.backgroundColor = "grey";
     kafelki[ktory].removeEventListener('contextmenu', flag)
     createBombs(event.target.identyfikator);
-    sprawdzSasiadow2(event.target.identyfikator);
+    sprawdzSasiadow();
+    odslonKafelek(event.target.identyfikator);
+    //sprawdzSasiadow2(event.target.identyfikator);
+    sprawdzPuste(event.target.identyfikator);
 }
 function createBombs(parametr) {
     let ktory = Number(parametr);
-    //let bombs = new Array();
-    //let ilosc = 0;
     // petla losujaca pozycje bomb
     while (bombs.length < 15) {
         let losowa = Math.floor(Math.random() * dlugosc)
@@ -148,15 +146,15 @@ function drawBomby() {
         kafelki[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
 }
-/*
-function sprawdzSasiadow(parametr) {
+function sprawdzSasiadow() {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     //console.log(parametr)
-    for (let i = 0; i <= dlugosc; i++) {
+    for (let i = 0; i < dlugosc; i++) {
         let nalezyDoBomb = false;
         for (let j = 0; j < bombs.length; j++) {
             if (i == bombs[j]) {
                 nalezyDoBomb = true;
+                kafelki[i].wartoscBomb = 'bomba';
             }
             else {
                 continue;
@@ -186,38 +184,61 @@ function sprawdzSasiadow(parametr) {
                         }
                     }
                 }
-                if (ileBomb > 0) {
-                    kafelki[i].innerHTML = ileBomb;
-                    switch (ileBomb) {
-                        case 1:
-                            kafelki[i].style.color = "blue";
-                            break;
-                        case 2:
-                            kafelki[i].style.color = "green";
-                            break;
-                        case 3:
-                            kafelki[i].style.color = "red";
-                            break;
-                        case 4:
-                            kafelki[i].style.color = "purple";
-                            break;
-                        case 5:
-                            kafelki[i].style.color = "orange";
-                            break;
-                    }
-                }
-                else {
-                    continue
-                }
+                kafelki[i].wartoscBomb = String(ileBomb);
             }
+        }
+        else {
+            kafelki[i].wartoscBomb = 'bomba';
         }
     }
 }
-*/
+function odslonKafelek(parametr) {
+    // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
+    var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
+    let nalezyDoBomb = false
+    for (let j = 0; j < bombs.length; j++) {
+        if (sprawdzany == bombs[j]) {
+            nalezyDoBomb = true;
+        }
+        else {
+            continue;
+        }
+    }
+    if (nalezyDoBomb == false) {
+        let ileBomb = Number(kafelki[sprawdzany].wartoscBomb);
+        if (ileBomb > 0) {
+            kafelki[sprawdzany].innerHTML = ileBomb;
+            switch (ileBomb) {
+                case 1:
+                    kafelki[sprawdzany].style.color = "blue";
+                    break;
+                case 2:
+                    kafelki[sprawdzany].style.color = "green";
+                    break;
+                case 3:
+                    kafelki[sprawdzany].style.color = "red";
+                    break;
+                case 4:
+                    kafelki[sprawdzany].style.color = "purple";
+                    break;
+                case 5:
+                    kafelki[sprawdzany].style.color = "orange";
+                    break;
+            }
+        }
+        else {
+            kafelki[sprawdzany].style.backgroundColor = "grey";
+        }
+    }
+    else {
+        kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
+        gameover();
+    }
+    console.log(kafelki[sprawdzany].wartoscBomb)
+}
 function sprawdzSasiadow2(parametr) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
-    console.log(sprawdzany);
     let nalezyDoBomb = false
     for (let j = 0; j < bombs.length; j++) {
         if (sprawdzany == bombs[j]) {
@@ -253,6 +274,7 @@ function sprawdzSasiadow2(parametr) {
             }
             if (ileBomb > 0) {
                 kafelki[sprawdzany].innerHTML = ileBomb;
+                //kafelki[sprawdzany].wartoscBomb = 'high';
                 switch (ileBomb) {
                     case 1:
                         kafelki[sprawdzany].style.color = "blue";
@@ -272,9 +294,11 @@ function sprawdzSasiadow2(parametr) {
                 }
             }
             else {
+                //kafelki[sprawdzany].wartoscBomb = 'low';
                 continue
             }
         }
+        console.log(kafelki[sprawdzany].wartoscBomb)
     }
     else {
         kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
@@ -285,7 +309,28 @@ function gameover() {
     alert("Game over!");
     location.reload();
 }
+function sprawdzPuste(parametr) {
+    let ktory = parametr;
+    if (kafelki[ktory].wartoscBomb == 0) {
+        if (kafelki[ktory - 1].wartoscBomb == 0) {
+            kafelki[ktory - 1].style.backgroundColor = "grey";
+            //sprawdzPuste(ktory - 1);
+        }
+        if (kafelki[ktory + 1].wartoscBomb == 0) {
+            kafelki[ktory + 1].style.backgroundColor = "grey";
+            //sprawdzPuste(ktory + 1);
+        }
+        if (kafelki[ktory - 10].wartoscBomb == 0) {
+            kafelki[ktory - 10].style.backgroundColor = "grey";
+            //sprawdzPuste(ktory - 10);
+        }
+        if (kafelki[ktory + 10].wartoscBomb == 0) {
+            kafelki[ktory + 10].style.backgroundColor = "grey";
+            //sprawdzPuste(ktory + 10);
+        }
+    }
+}
 function flag() {
     var ktory = event.target.identyfikator;
-    kafelki[ktory].style.backgroundColor = "grey";
+    kafelki[ktory].style.backgroundColor = "red";
 }
