@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(0, 0, 116);
+    background-color: rgb(250, 99, 61);
     color: white;
 }
 .kafelek{
@@ -16,6 +16,15 @@ body{
     display:flex;
     justify-content: center; 
     align-items: center;
+}
+.plansza{
+    background-color: white;
+    height: 640px;
+    width: 640px;
+    align-items: center;
+    padding: 10px;
+    margin: auto;
+    margin-top: 200px;
 }
 .rzad{
     clear: both;

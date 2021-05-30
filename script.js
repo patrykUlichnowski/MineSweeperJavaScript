@@ -3,10 +3,13 @@ let dlugosc = kafelki.length;
 //bombs ma indeksy kafelek z bombami
 let bombs = new Array();
 let ilosc = 0;
+let BombsLeft = 15;
 function dodajListenery() {
     //let kafelki = document.querySelectorAll('#square')
     for (var i = 0; i < kafelki.length; i++) {
+        document.getElementById('ilebomb').innerHTML = 'Bombs left: ' + String(BombsLeft);
         kafelki[i].addEventListener("click", kliknijKafelek);
+        kafelki[i].addEventListener("contextmenu", flag);
         kafelki[i].identyfikator = i;
         //createBombs();
     }
@@ -15,6 +18,7 @@ function kliknijKafelek() {
     //console.log(event.target.identyfikator)
     var ktory = event.target.identyfikator
     kafelki[ktory].style.backgroundColor = "grey";
+    kafelki[ktory].removeEventListener('contextmenu', flag)
     createBombs(event.target.identyfikator);
     sprawdzSasiadow2(event.target.identyfikator);
 }
@@ -144,6 +148,7 @@ function drawBomby() {
         kafelki[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
 }
+/*
 function sprawdzSasiadow(parametr) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     //console.log(parametr)
@@ -208,6 +213,7 @@ function sprawdzSasiadow(parametr) {
         }
     }
 }
+*/
 function sprawdzSasiadow2(parametr) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
@@ -272,5 +278,14 @@ function sprawdzSasiadow2(parametr) {
     }
     else {
         kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
+        gameover();
     }
+}
+function gameover() {
+    alert("Game over!");
+    location.reload();
+}
+function flag() {
+    var ktory = event.target.identyfikator;
+    kafelki[ktory].style.backgroundColor = "grey";
 }
