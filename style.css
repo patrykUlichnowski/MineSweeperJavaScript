@@ -35,8 +35,20 @@ body{
 }
 #ilebomb{
 font-size:1.5em;
+margin-left:35%;
+}
+#czas > img{
+width:50px;
+height:50px;
+}
+#czas{
+margin-left:17%;
+font-size:1.5em;
+}
+.flexwrap{
+    display:flex;
 margin:0;
 padding:0;
-margin-left:36.5%;
-margin-top:3.5%;  
+width:100%;
+margin-top:3.5%;
 }
