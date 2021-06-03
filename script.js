@@ -12,7 +12,7 @@ let BombsLeft = 15;
 let doWyswietlenia = [[9], []];
 function dodajListenery() {
     for (var i = 0; i < kafelki.length; i++) {
-        document.getElementById('ilebomb').innerHTML = 'Bombs left: ' + String(BombsLeft);
+        document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(BombsLeft);
         kafelki[i].addEventListener("click", kliknijKafelek);
         kafelki[i].addEventListener("contextmenu", flag);
         kafelki[i].identyfikator = i;
@@ -328,6 +328,8 @@ function sprawdzPuste(parametr) {
     // jesli nie to wyswietla
     // trzeba bedzie zrobic funkcje co po dlugosci arraya bedzie go wyswietlac przez odslonKafelek() 
     // [+-1 zeby tez te z cyframi kolo pustych sie pokazaly]
+    //------------------------------------------UPDATE 03/06/2021
+    // teoretycznie działa ale trzeba podniemic wartosci z x9 na x9+1 i w drugim przypadku odwrotnie
     let ktory = parametr;
     let ktoryRzad = 0;
     if (ktory <= 9) {
@@ -361,12 +363,23 @@ function sprawdzPuste(parametr) {
         ktoryRzad = 9;
     }
     for (let i = 0; i < 10; i++) {
-        if (ktory == 0 || (ktory % 10 == 0)) { //zeby w lewo nie wyszlo
+        if (ktory < 0 || (ktory % 10 == 0)) { //zeby w lewo nie wyszlo
             break;
         }
         else {
             if (kafelki[ktory].wartoscBomb == "pusty") {
-                doWyswietlenia[ktoryRzad].push(ktory);
+                let wystepujewRzedzie = false
+                for (let j = 0; j < doWyswietlenia[ktoryRzad].length; j++) {
+                    if (ktory == doWyswietlenia[ktoryRzad][j]) {
+                        wystepujewRzedzie = true;
+                    }
+                }
+                if (wystepujewRzedzie == false) {
+                    doWyswietlenia[ktoryRzad].push(ktory);
+                }
+                else {
+                    continue;
+                }
             }
             else {
                 break;
@@ -375,36 +388,44 @@ function sprawdzPuste(parametr) {
         ktory -= 1;
     }
     for (let i = 0; i < 10; i++) {
+        ktory += 1;
         if (ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 || ktory == 59 ||
             ktory == 69 || ktory == 79 || ktory == 89 || ktory == 99) { //zeby w prawo nie wyszlo
             break;
         }
         else {
             if (kafelki[ktory].wartoscBomb == "pusty") {
-                doWyswietlenia[ktoryRzad].push(ktory);
+                let wystepujewRzedzie = false
+                for (let j = 0; j < doWyswietlenia[ktoryRzad].length; j++) {
+                    if (ktory == doWyswietlenia[ktoryRzad][j]) {
+                        wystepujewRzedzie = true;
+                    }
+                }
+                if (wystepujewRzedzie == false) {
+                    doWyswietlenia[ktoryRzad].push(ktory);
+                }
+                else {
+                    continue;
+                }
             }
             else {
                 break;
             }
         }
-        ktory += 1;
     }
     let wywolajGora = false
-    let wywolajDol = false
     let index = 0;
     for (let i = 0; i < doWyswietlenia.length; i++) {
-        // to juz jest zle bo kurwa bedzie zawsze sprawdzac od tego co juz bylo sprawdzone np i==1
-        let sprawdzWyzej = Number(doWyswietlenia[ktoryRzad][i]) - 10;
-        console.log(sprawdzWyzej)
-        if (kafelki[sprawdzWyzej].wartoscBomb == "pusty") {
-            wywolajGora = true;
-            index = sprawdzWyzej;
-            break;
+        if (ktoryRzad > 0) {
+            let sprawdzWyzej = Number(doWyswietlenia[ktoryRzad][i]) - 10;
+            if (kafelki[sprawdzWyzej].wartoscBomb == "pusty") {
+                wywolajGora = true;
+                index = sprawdzWyzej;
+                break;
+            }
         }
     }
-    if (wywolajGora == true) {
-        sprawdzPuste(index);
-    }
+    console.log(doWyswietlenia)
 }
 function flag() {
     var ktory = event.target.identyfikator;

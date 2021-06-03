@@ -1,14 +1,18 @@
 body{
-    background-color: rgb(250, 99, 61);
+    background-color: rgb(74, 61, 250);
     color: white;
+    background-image:url('grafika/pngegg.png'),url('grafika/stars.jpg');
+    background-size:60%,cover;
+    background-position-x:center;
+    background-repeat:no-repeat,no-repeat;
 }
 .kafelek{
     float: left;
     font-weight:bold;
     /*background-color: rgb(187, 183, 183);*/
     background-color: rgb(54, 54, 54);
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 35px;
     margin: 2px;
     color:black;
     text-align: center;
@@ -19,13 +23,20 @@ body{
 }
 .plansza{
     background-color: white;
-    height: 640px;
-    width: 640px;
+    height: 390px;
+    width: 490px;
     align-items: center;
     padding: 10px;
     margin: auto;
-    margin-top: 200px;
+    margin-top: 110px;
 }
 .rzad{
     clear: both;
+}
+#ilebomb{
+font-size:1.5em;
+margin:0;
+padding:0;
+margin-left:36.5%;
+margin-top:3.5%;  
 }
