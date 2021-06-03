@@ -10,6 +10,23 @@ let bombs = new Array();
 let ilosc = 0;
 let BombsLeft = 15;
 let doWyswietlenia = [[9], []];
+let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
+let lock=false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
+function odliczanieczasu(){
+    const czasdisplay=document.querySelector('#czas');
+    let time=Number(0);
+    if(lock===false){
+        timer=setInterval(() => {
+            time++
+            czasdisplay.innerHTML=`<img src="grafika/clock.svg" alt="">${time}` 
+            lock=true;
+        }, 1000);
+    }
+}
+function wongame(){
+//Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
+clearInterval(timer);    
+}
 function dodajListenery() {
     for (var i = 0; i < kafelki.length; i++) {
         document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(BombsLeft);
@@ -23,6 +40,7 @@ function kliknijKafelek() {
     kafelki[ktory].style.backgroundColor = "grey";
     kafelki[ktory].removeEventListener('contextmenu', flag)
     createBombs(event.target.identyfikator);
+    odliczanieczasu(); // Tutaj zaczyna sie odliczanie czasu
     sprawdzSasiadow();
     odslonKafelek(event.target.identyfikator);
     //sprawdzSasiadow2(event.target.identyfikator);
@@ -318,6 +336,7 @@ function sprawdzSasiadow2(parametr) {
     }
 }
 function gameover() {
+    clearInterval(timer);
     alert("Game over!");
     location.reload();
 }
