@@ -9,23 +9,23 @@ let dlugosc = kafelki.length;
 let bombs = new Array();
 let ilosc = 0;
 let BombsLeft = 15;
-let doWyswietlenia = [[9], []];
+let doWyswietlenia = [[], []];
 let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
-let lock=false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
-function odliczanieczasu(){
-    const czasdisplay=document.querySelector('#czas');
-    let time=Number(0);
-    if(lock===false){
-        timer=setInterval(() => {
+let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
+function odliczanieczasu() {
+    const czasdisplay = document.querySelector('#czas');
+    let time = Number(0);
+    if (lock === false) {
+        timer = setInterval(() => {
             time++
-            czasdisplay.innerHTML=`<img src="grafika/clock.svg" alt="">${time}` 
-            lock=true;
+            czasdisplay.innerHTML = `<img src="grafika/clock.svg" alt="">${time}`
+            lock = true;
         }, 1000);
     }
 }
-function wongame(){
-//Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
-clearInterval(timer);    
+function wongame() {
+    //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
+    clearInterval(timer);
 }
 function dodajListenery() {
     for (var i = 0; i < kafelki.length; i++) {
@@ -336,7 +336,6 @@ function sprawdzSasiadow2(parametr) {
     }
 }
 function gameover() {
-    clearInterval(timer);
     alert("Game over!");
     location.reload();
 }
@@ -347,8 +346,8 @@ function sprawdzPuste(parametr) {
     // jesli nie to wyswietla
     // trzeba bedzie zrobic funkcje co po dlugosci arraya bedzie go wyswietlac przez odslonKafelek() 
     // [+-1 zeby tez te z cyframi kolo pustych sie pokazaly]
-    //------------------------------------------UPDATE 03/06/2021
-    // teoretycznie działa ale trzeba podniemic wartosci z x9 na x9+1 i w drugim przypadku odwrotnie
+    //------------------------------------------UPDATE 04/06/2021
+    // WSZYSTKO PONIZEJ DZIALA
     let ktory = parametr;
     let ktoryRzad = 0;
     if (ktory <= 9) {
@@ -381,8 +380,13 @@ function sprawdzPuste(parametr) {
     else if (ktoryRzad <= 99) {
         ktoryRzad = 9;
     }
+    if (doWyswietlenia[ktoryRzad].length == 0) {
+        doWyswietlenia[ktoryRzad].push(ktory);
+    }
     for (let i = 0; i < 10; i++) {
-        if (ktory < 0 || (ktory % 10 == 0)) { //zeby w lewo nie wyszlo
+        ktory -= 1;
+        if (ktory < 0 || ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 || ktory == 59 ||
+            ktory == 69 || ktory == 79 || ktory == 89) {//zeby w lewo nie wyszlo
             break;
         }
         else {
@@ -404,12 +408,10 @@ function sprawdzPuste(parametr) {
                 break;
             }
         }
-        ktory -= 1;
     }
     for (let i = 0; i < 10; i++) {
         ktory += 1;
-        if (ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 || ktory == 59 ||
-            ktory == 69 || ktory == 79 || ktory == 89 || ktory == 99) { //zeby w prawo nie wyszlo
+        if (ktory > 99 || ktory == ktoryRzad * 10 + 10) { //zeby w prawo nie wyszlo
             break;
         }
         else {
@@ -434,7 +436,7 @@ function sprawdzPuste(parametr) {
     }
     let wywolajGora = false
     let index = 0;
-    for (let i = 0; i < doWyswietlenia.length; i++) {
+    /*for (let i = 0; i < doWyswietlenia.length; i++) {
         if (ktoryRzad > 0) {
             let sprawdzWyzej = Number(doWyswietlenia[ktoryRzad][i]) - 10;
             if (kafelki[sprawdzWyzej].wartoscBomb == "pusty") {
@@ -443,7 +445,7 @@ function sprawdzPuste(parametr) {
                 break;
             }
         }
-    }
+    }*/
     console.log(doWyswietlenia)
 }
 function flag() {
