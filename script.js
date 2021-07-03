@@ -2,77 +2,80 @@
 
     AKTUALNIE sprawdzSasiadow2() oraz drawBomby() nic nie robia ale zostaly narazie w kodzie jakby co
 
+    trzeba zrobic cos takiego ze bierze sie dlugosc rzedu i podaje id bloku do funkcji ktora bedzie zwracala
+    w ktorym rzedzie lezy aby moc przerobic te ulomne ify z liczbami
+
 */
-let kafelki = document.querySelectorAll('#square')
-let dlugosc = kafelki.length;
-//bombs ma indeksy kafelek z bombami
-let bombs = new Array();
-let ilosc = 0;
-let BombsLeft = 15;
-let doWyswietlenia = [[], []];
+let blocks = document.querySelectorAll('#square');
+let columns = Math.sqrt(blocks.length);
+let rows = blocks.length / columns
+let bombsLength = blocks.length;
+let bombs = new Array();//bombs ma indeksy kafelek z bombami
+let amount = 0;
+let bombsLeft = 15;
+let toDraw = [[], []];
 let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
 let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
-function odliczanieczasu() {
-    const czasdisplay = document.querySelector('#czas');
+function Counter() {
+    const timeDisplay = document.querySelector('#czas');
     let time = Number(0);
     if (lock === false) {
         timer = setInterval(() => {
             time++
-            czasdisplay.innerHTML = `<img src="grafika/clock.svg" alt="">${time}`
+            timeDisplay.innerHTML = `<img src="grafika/clock.svg" alt="">${time}`
             lock = true;
         }, 1000);
     }
 }
-function wongame() {
+function WonGame() {
     //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
     clearInterval(timer);
 }
-function dodajListenery() {
-    for (var i = 0; i < kafelki.length; i++) {
-        document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(BombsLeft);
-        kafelki[i].addEventListener("click", kliknijKafelek);
-        kafelki[i].addEventListener("contextmenu", flag);
-        kafelki[i].identyfikator = i;
+function AddListeners() {
+    for (var i = 0; i < blocks.length; i++) {
+        document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+        blocks[i].addEventListener("click", LeftClick);
+        blocks[i].addEventListener("contextmenu", Flag);
+        blocks[i].blockID = i;
     }
 }
-function kliknijKafelek() {
-    var ktory = event.target.identyfikator
-    kafelki[ktory].style.backgroundColor = "grey";
-    kafelki[ktory].removeEventListener('contextmenu', flag)
-    createBombs(event.target.identyfikator);
-    odliczanieczasu(); // Tutaj zaczyna sie odliczanie czasu
-    sprawdzSasiadow();
-    odslonKafelek(event.target.identyfikator);
-    //sprawdzSasiadow2(event.target.identyfikator);
-    sprawdzPuste(event.target.identyfikator);
+function LeftClick() {
+    var clicked = event.target.blockID
+    blocks[clicked].removeEventListener('contextmenu', Flag)
+    CreateBombs(event.target.blockID);
+    Counter(); // Tutaj zaczyna sie odliczanie czasu
+    CheckInside();
+    ShowContent(event.target.blockID);
+    //sprawdzSasiadow2(event.target.blockID);
+    // CheckEmpty(event.target.blockID);
 }
-function createBombs(parametr) {
-    let ktory = Number(parametr);
+function CreateBombs(clicked) {
+    let blockToCheck = Number(clicked);
+    let whichRow = RowNumber(clicked);
     // petla losujaca pozycje bomb
     while (bombs.length < 15) {
-        let losowa = Math.floor(Math.random() * dlugosc)
+        let randomBlock = Math.floor(Math.random() * bombsLength)
         //lewa czesc
-        if (ktory == 0 || ktory == 10 || ktory == 20 || ktory == 30 || ktory == 40
-            || ktory == 50 || ktory == 60 || ktory == 70 || ktory == 80 || ktory == 90) {
-            if (losowa != ktory && losowa != ktory + 1 && losowa != ktory - 10
-                && losowa != ktory - 9 && losowa != ktory + 10 && losowa != ktory + 11) {
-                let powtorzenie = false;
-                if (ilosc == 0) {
-                    bombs[ilosc] = losowa;
-                    ilosc += 1;
+        if (blockToCheck == 0 || blockToCheck % columns == 0) {
+            if (randomBlock != blockToCheck && randomBlock != blockToCheck + 1 && randomBlock != blockToCheck - columns
+                && randomBlock != blockToCheck - (columns - 1) && randomBlock != blockToCheck + columns && randomBlock != blockToCheck + (columns + 1)) {
+                let repeating = false;
+                if (amount == 0) {
+                    bombs[amount] = randomBlock;
+                    amount += 1;
                 }
                 else {
                     for (var j = 0; j < bombs.length; j++) {
-                        if (Number(bombs[j]) == Number(losowa)) {
-                            powtorzenie = true;
+                        if (Number(bombs[j]) == Number(randomBlock)) {
+                            repeating = true;
                         }
                     }
-                    if (powtorzenie == true) {
+                    if (repeating == true) {
                         continue
                     }
                     else {
-                        bombs[ilosc] = losowa;
-                        ilosc += 1;
+                        bombs[amount] = randomBlock;
+                        amount += 1;
                     }
                 }
             }
@@ -82,27 +85,26 @@ function createBombs(parametr) {
         }
         //prawa czesc
         else {
-            if (ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 ||
-                ktory == 59 || ktory == 69 || ktory == 79 || ktory == 89 || ktory == 99) {
-                if (losowa != ktory && losowa != ktory - 1 && losowa != ktory - 10
-                    && losowa != ktory - 11 && losowa != ktory + 10 && losowa != ktory + 9) {
-                    let powtorzenie = false;
-                    if (ilosc == 0) {
-                        bombs[ilosc] = losowa;
-                        ilosc += 1;
+            if (blockToCheck == 9 + (10 * whichRow)) {
+                if (randomBlock != blockToCheck && randomBlock != blockToCheck - 1 && randomBlock != blockToCheck - columns
+                    && randomBlock != blockToCheck - (columns + 1) && randomBlock != blockToCheck + columns && randomBlock != blockToCheck + (columns - 1)) {
+                    let repeating = false;
+                    if (amount == 0) {
+                        bombs[amount] = randomBlock;
+                        amount += 1;
                     }
                     else {
                         for (var j = 0; j < bombs.length; j++) {
-                            if (Number(bombs[j]) == Number(losowa)) {
-                                powtorzenie = true;
+                            if (Number(bombs[j]) == Number(randomBlock)) {
+                                repeating = true;
                             }
                         }
-                        if (powtorzenie == true) {
+                        if (repeating == true) {
                             continue
                         }
                         else {
-                            bombs[ilosc] = losowa;
-                            ilosc += 1;
+                            bombs[amount] = randomBlock;
+                            amount += 1;
                         }
                     }
                 }
@@ -112,25 +114,26 @@ function createBombs(parametr) {
             }
             // reszta przypadkow
             else {
-                if (losowa != ktory && losowa != ktory - 1 && losowa != ktory + 1 && losowa != ktory - 10 && losowa != ktory - 9
-                    && losowa != ktory - 11 && losowa != ktory + 10 && losowa != ktory + 9 && losowa != ktory + 11) {
-                    let powtorzenie = false;
-                    if (ilosc == 0) {
-                        bombs[ilosc] = losowa;
-                        ilosc += 1;
+                if (randomBlock != blockToCheck && randomBlock != blockToCheck - 1 && randomBlock != blockToCheck + 1 && randomBlock != blockToCheck - columns
+                    && randomBlock != blockToCheck - (columns - 1) && randomBlock != blockToCheck - (columns + 1) && randomBlock != blockToCheck + columns
+                    && randomBlock != blockToCheck + (columns - 1) && randomBlock != blockToCheck + (columns + 1)) {
+                    let repeating = false;
+                    if (amount == 0) {
+                        bombs[amount] = randomBlock;
+                        amount += 1;
                     }
                     else {
                         for (var j = 0; j < bombs.length; j++) {
-                            if (Number(bombs[j]) == Number(losowa)) {
-                                powtorzenie = true;
+                            if (Number(bombs[j]) == Number(randomBlock)) {
+                                repeating = true;
                             }
                         }
-                        if (powtorzenie == true) {
+                        if (repeating == true) {
                             continue
                         }
                         else {
-                            bombs[ilosc] = losowa;
-                            ilosc += 1;
+                            bombs[amount] = randomBlock;
+                            amount += 1;
                         }
                     }
                 }
@@ -139,133 +142,251 @@ function createBombs(parametr) {
                 }
             }
         }
-        /*
-        let powtorzenie = false;
-        if (ilosc == 0) {
-            bombs[ilosc] = losowa;
-            ilosc += 1;
-        }
-        else {
-            for (var j = 0; j < bombs.length; j++) {
-                if (Number(bombs[j]) == Number(losowa)) {
-                    powtorzenie = true;
-                }
-            }
-            if (powtorzenie == true) {
-                continue
-            }
-            else {
-                bombs[ilosc] = losowa;
-                ilosc += 1;
-            }
-        }
-        */
     }
     // petla nanoszaca grafiki
     //drawBomby();
 }
-function drawBomby() {
-    for (let i = 0; i < bombs.length; i++) {
-        let wartosc = bombs[i];
-        kafelki[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
-    }
-}
-function sprawdzSasiadow() {
+function CheckInside() {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
-    //console.log(parametr)
-    for (let i = 0; i < dlugosc; i++) {
-        let nalezyDoBomb = false;
+    for (let i = 0; i < bombsLength; i++) {
+        let inBombsArray = false;
         for (let j = 0; j < bombs.length; j++) {
             if (i == bombs[j]) {
-                nalezyDoBomb = true;
-                kafelki[i].wartoscBomb = 'bomba';
+                inBombsArray = true;
+                blocks[i].blockValue = 'bomba';
             }
             else {
                 continue;
             }
         }
-        if (nalezyDoBomb == false) {
-            let ileBomb = 0
+        if (inBombsArray == false) {
+            let bombsAmount = 0
             for (let j = 0; j < bombs.length; j++) {
                 //lewa ściana
-                if (i == 0 || i == 10 || i == 20 || i == 30 || i == 40 || i == 50 || i == 60 || i == 70 || i == 80 || i == 90) {
+                if (i == 0 || i % 10 == 0) {
                     if (i - 10 == bombs[j] || i - 9 == bombs[j] || i + 1 == bombs[j] || i + 10 == bombs[j] || i + 11 == bombs[j]) {
-                        ileBomb += 1;
+                        bombsAmount += 1;
                     }
                 }
                 else {
                     // prawa ściana
                     if (i == 9 || i == 19 || i == 29 || i == 39 || i == 49 || i == 59 || i == 69 || i == 79 || i == 89 || i == 99) {
                         if (i - 11 == bombs[j] || i - 10 == bombs[j] || i - 1 == bombs[j] || i + 9 == bombs[j] || i + 10 == bombs[j]) {
-                            ileBomb += 1;
+                            bombsAmount += 1;
                         }
                     }
                     //reszta
                     else {
                         if (i - 11 == bombs[j] || i - 10 == bombs[j] || i - 9 == bombs[j] || i - 1 == bombs[j] ||
                             i + 1 == bombs[j] || i + 9 == bombs[j] || i + 10 == bombs[j] || i + 11 == bombs[j]) {
-                            ileBomb += 1;
+                            bombsAmount += 1;
                         }
                     }
                 }
-                if (ileBomb > 0) {
-                    kafelki[i].wartoscBomb = String(ileBomb);
+                if (bombsAmount > 0) {
+                    blocks[i].blockValue = String(bombsAmount);
                 }
                 else {
-                    kafelki[i].wartoscBomb = 'pusty';
+                    blocks[i].blockValue = 'empty';
                 }
             }
         }
         else {
-            kafelki[i].wartoscBomb = 'bomba';
+            blocks[i].blockValue = 'bomba';
         }
     }
-
+    //console.log(blocks.blockValue)
 }
-function odslonKafelek(parametr) {
+function ShowContent(block) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
-    var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
-    let nalezyDoBomb = false
+    var checked = Number(block); // id kafelka wywolujacego cos tam
+    let inBombArray = false
+    blocks[checked].style.backgroundColor = "grey";
     for (let j = 0; j < bombs.length; j++) {
-        if (sprawdzany == bombs[j]) {
-            nalezyDoBomb = true;
+        if (checked == bombs[j]) {
+            inBombArray = true;
         }
         else {
             continue;
         }
     }
-    if (nalezyDoBomb == false) {
-        let ileBomb = Number(kafelki[sprawdzany].wartoscBomb);
-        if (ileBomb > 0) {
-            kafelki[sprawdzany].innerHTML = ileBomb;
-            switch (ileBomb) {
+    if (inBombArray == false) {
+        let bombsAmount = Number(blocks[checked].blockValue);
+        if (bombsAmount > 0) {
+            blocks[checked].innerHTML = bombsAmount;
+            switch (bombsAmount) {
                 case 1:
-                    kafelki[sprawdzany].style.color = "blue";
+                    blocks[checked].style.color = "blue";
                     break;
                 case 2:
-                    kafelki[sprawdzany].style.color = "green";
+                    blocks[checked].style.color = "green";
                     break;
                 case 3:
-                    kafelki[sprawdzany].style.color = "red";
+                    blocks[checked].style.color = "red";
                     break;
                 case 4:
-                    kafelki[sprawdzany].style.color = "purple";
+                    blocks[checked].style.color = "purple";
                     break;
                 case 5:
-                    kafelki[sprawdzany].style.color = "orange";
+                    blocks[checked].style.color = "orange";
+                    break;
+                case 6:
+                    blocks[checked].style.color = "pink";
+                    break;
+                case 7:
+                    blocks[checked].style.color = "yellow";
+                    break;
+                case 8:
+                    blocks[checked].style.color = "brown";
                     break;
             }
         }
         else {
-            kafelki[sprawdzany].style.backgroundColor = "grey";
+            blocks[checked].style.backgroundColor = "grey";
         }
     }
     else {
-        kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
-        gameover();
+        blocks[checked].innerHTML = "<img src=\"grafika/bomba.png\">";
+        GameOver();
     }
-    //console.log(kafelki[sprawdzany].wartoscBomb)
 }
+function GameOver() {
+    alert("Game over!");
+    location.reload();
+}
+function RowNumber(blockNumber) {
+    return parseInt(blockNumber / rows);
+}
+function CheckEmpty(checkBlock) {
+    //Lewo prawo z tablicy sprawdza gora dol
+    // petla dodaje do tablicy
+    // potem petla sprawda -10 kazdy element a jak nie to +10
+    // jesli nie to wyswietla
+    // trzeba bedzie zrobic funkcje co po dlugosci arraya bedzie go wyswietlac przez odslonKafelek() 
+    // [+-1 zeby tez te z cyframi kolo pustych sie pokazaly]
+    //------------------------------------------UPDATE 04/06/2021
+    // WSZYSTKO PONIZEJ DZIALA
+
+    // let cos = RowNumber(whichOne);
+    // console.log(cos);
+    // if (whichOne <= 9) {
+    //     whichRow = 0;
+    // }
+    // else if (whichRow <= 19) {
+    //     whichRow = 1;
+    // }
+    // else if (whichRow <= 29) {
+    //     whichRow = 2;
+    // }
+    // else if (whichRow <= 39) {
+    //     whichRow = 3;
+    // }
+    // else if (whichRow <= 49) {
+    //     whichRow = 4;
+    // }
+    // else if (whichRow <= 59) {
+    //     whichRow = 5;
+    // }
+    // else if (whichRow <= 69) {
+    //     whichRow = 6;
+    // }
+    // else if (whichRow <= 79) {
+    //     whichRow = 7;
+    // }
+    // else if (whichRow <= 89) {
+    //     whichRow = 8;
+    // }
+    // else if (whichRow <= 99) {
+    //     whichRow = 9;
+    // }
+    let whichOne = checkBlock;
+    let whichRow = RowNumber(whichOne);
+    if (toDraw[whichRow].length == 0) {
+        toDraw[whichRow].push(whichOne);
+    }
+    for (let i = 0; i < 10; i++) {
+        whichOne -= 1;
+        // if (whichOne < 0 || whichOne == 9 || whichOne == 19 || whichOne == 29 || whichOne == 39 || whichOne == 49 || whichOne == 59 ||
+        //     whichOne == 69 || whichOne == 79 || whichOne == 89) {
+        if (whichOne < 0 || whichOne == (9 + 10 * whichRow)) {//zeby w lewo nie wyszlo
+            break;
+        }
+        else {
+            if (blocks[whichOne].blockValue == "empty") {
+                let isInTheRow = false
+                for (let j = 0; j < toDraw[whichRow].length; j++) {
+                    if (whichOne == toDraw[whichRow][j]) {
+                        isInTheRow = true;
+                    }
+                }
+                if (isInTheRow == false) {
+                    toDraw[whichRow].push(whichOne);
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    for (let i = 0; i < 10; i++) {
+        whichOne += 1;
+        if (whichOne > 99 || whichOne == (whichRow * 10 + 10)) { //zeby w prawo nie wyszlo
+            break;
+        }
+        else {
+            if (blocks[whichOne].blockValue == "empty") {
+                let wystepujewRzedzie = false
+                for (let j = 0; j < toDraw[whichRow].length; j++) {
+                    if (whichOne == toDraw[whichRow][j]) {
+                        wystepujewRzedzie = true;
+                    }
+                }
+                if (wystepujewRzedzie == false) {
+                    toDraw[whichRow].push(whichOne);
+                }
+                else {
+                    continue;
+                }
+            }
+            else {
+                break;
+            }
+        }
+    }
+    let callUp = true //czy ma sie wykonac gorna petla
+    let callDown = true
+    if (whichRow == 0) {
+        callUp = false
+    }
+    if (whichRow == 9) {
+        callDown = false
+    }
+    if (callUp == true) {
+        for (let i = 0; i < toDraw[whichRow]; i++) {
+            let choosed = Number(toDraw[whichRow][i]);
+            if (blocks[Number(choosed - 10)].blockValue == "empty") {
+                //console.log('HUJ');
+                //console.log(blocks[Number(choosed - 10)].blockValue);
+                CheckEmpty(Number(choosed - 10));
+            }
+            else {
+                //console.log(blocks[Number(choosed - 10)].blockValue);
+            }
+        }
+    }
+    /*
+    to gowno do gory nie dziala ale mozna byloby to inaczej zrobic, stworzyc tablice z wszystkimi pustymi polami a nastepnie przekazywac do funkcji
+    ja oraz nacisniety kafelek po czym z tej pustej tablicy sprawdzac -1 +1 -10 +10
+    */
+}
+function Flag() {
+    var clicked = event.target.blockID;
+    blocks[clicked].innerHTML = "<img src=\"grafika/flaga.png\">";
+}
+// ! nieuzywane funkcje
 function sprawdzSasiadow2(parametr) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
@@ -303,152 +424,38 @@ function sprawdzSasiadow2(parametr) {
                 }
             }
             if (ileBomb > 0) {
-                kafelki[sprawdzany].innerHTML = ileBomb;
-                //kafelki[sprawdzany].wartoscBomb = 'high';
+                blocks[sprawdzany].innerHTML = ileBomb;
                 switch (ileBomb) {
                     case 1:
-                        kafelki[sprawdzany].style.color = "blue";
+                        blocks[sprawdzany].style.color = "blue";
                         break;
                     case 2:
-                        kafelki[sprawdzany].style.color = "green";
+                        blocks[sprawdzany].style.color = "green";
                         break;
                     case 3:
-                        kafelki[sprawdzany].style.color = "red";
+                        blocks[sprawdzany].style.color = "red";
                         break;
                     case 4:
-                        kafelki[sprawdzany].style.color = "purple";
+                        blocks[sprawdzany].style.color = "purple";
                         break;
                     case 5:
-                        kafelki[sprawdzany].style.color = "orange";
+                        blocks[sprawdzany].style.color = "orange";
                         break;
                 }
             }
             else {
-                //kafelki[sprawdzany].wartoscBomb = 'low';
                 continue
             }
         }
-        console.log(kafelki[sprawdzany].wartoscBomb)
     }
     else {
-        kafelki[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
-        gameover();
+        blocks[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
+        GameOver();
     }
 }
-function gameover() {
-    alert("Game over!");
-    location.reload();
-}
-function sprawdzPuste(parametr) {
-    //Lewo prawo z tablicy sprawdza gora dol
-    // petla dodaje do tablicy
-    // potem petla sprawda -10 kazdy element a jak nie to +10
-    // jesli nie to wyswietla
-    // trzeba bedzie zrobic funkcje co po dlugosci arraya bedzie go wyswietlac przez odslonKafelek() 
-    // [+-1 zeby tez te z cyframi kolo pustych sie pokazaly]
-    //------------------------------------------UPDATE 04/06/2021
-    // WSZYSTKO PONIZEJ DZIALA
-    let ktory = parametr;
-    let ktoryRzad = 0;
-    if (ktory <= 9) {
-        ktoryRzad = 0;
+function drawBomby() {
+    for (let i = 0; i < bombs.length; i++) {
+        let wartosc = bombs[i];
+        blocks[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
     }
-    else if (ktoryRzad <= 19) {
-        ktoryRzad = 1;
-    }
-    else if (ktoryRzad <= 29) {
-        ktoryRzad = 2;
-    }
-    else if (ktoryRzad <= 39) {
-        ktoryRzad = 3;
-    }
-    else if (ktoryRzad <= 49) {
-        ktoryRzad = 4;
-    }
-    else if (ktoryRzad <= 59) {
-        ktoryRzad = 5;
-    }
-    else if (ktoryRzad <= 69) {
-        ktoryRzad = 6;
-    }
-    else if (ktoryRzad <= 79) {
-        ktoryRzad = 7;
-    }
-    else if (ktoryRzad <= 89) {
-        ktoryRzad = 8;
-    }
-    else if (ktoryRzad <= 99) {
-        ktoryRzad = 9;
-    }
-    if (doWyswietlenia[ktoryRzad].length == 0) {
-        doWyswietlenia[ktoryRzad].push(ktory);
-    }
-    for (let i = 0; i < 10; i++) {
-        ktory -= 1;
-        if (ktory < 0 || ktory == 9 || ktory == 19 || ktory == 29 || ktory == 39 || ktory == 49 || ktory == 59 ||
-            ktory == 69 || ktory == 79 || ktory == 89) {//zeby w lewo nie wyszlo
-            break;
-        }
-        else {
-            if (kafelki[ktory].wartoscBomb == "pusty") {
-                let wystepujewRzedzie = false
-                for (let j = 0; j < doWyswietlenia[ktoryRzad].length; j++) {
-                    if (ktory == doWyswietlenia[ktoryRzad][j]) {
-                        wystepujewRzedzie = true;
-                    }
-                }
-                if (wystepujewRzedzie == false) {
-                    doWyswietlenia[ktoryRzad].push(ktory);
-                }
-                else {
-                    continue;
-                }
-            }
-            else {
-                break;
-            }
-        }
-    }
-    for (let i = 0; i < 10; i++) {
-        ktory += 1;
-        if (ktory > 99 || ktory == ktoryRzad * 10 + 10) { //zeby w prawo nie wyszlo
-            break;
-        }
-        else {
-            if (kafelki[ktory].wartoscBomb == "pusty") {
-                let wystepujewRzedzie = false
-                for (let j = 0; j < doWyswietlenia[ktoryRzad].length; j++) {
-                    if (ktory == doWyswietlenia[ktoryRzad][j]) {
-                        wystepujewRzedzie = true;
-                    }
-                }
-                if (wystepujewRzedzie == false) {
-                    doWyswietlenia[ktoryRzad].push(ktory);
-                }
-                else {
-                    continue;
-                }
-            }
-            else {
-                break;
-            }
-        }
-    }
-    let wywolajGora = false
-    let index = 0;
-    /*for (let i = 0; i < doWyswietlenia.length; i++) {
-        if (ktoryRzad > 0) {
-            let sprawdzWyzej = Number(doWyswietlenia[ktoryRzad][i]) - 10;
-            if (kafelki[sprawdzWyzej].wartoscBomb == "pusty") {
-                wywolajGora = true;
-                index = sprawdzWyzej;
-                break;
-            }
-        }
-    }*/
-    console.log(doWyswietlenia)
-}
-function flag() {
-    var ktory = event.target.identyfikator;
-    kafelki[ktory].innerHTML = "<img src=\"grafika/flaga.png\">";
 }
