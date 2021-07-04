@@ -1,7 +1,6 @@
 body{
-    background-color: rgb(74, 61, 250);
+    background-color: rgb(0, 0, 0);
     color: white;
-    background-image:url('grafika/pngegg.png'),url('grafika/stars.jpg');
     background-size:60%,cover;
     background-position-x:center;
     background-repeat:no-repeat,no-repeat;

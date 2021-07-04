@@ -1,23 +1,14 @@
-/* 
-
-    AKTUALNIE sprawdzSasiadow2() oraz drawBomby() nic nie robia ale zostaly narazie w kodzie jakby co
-
-    trzeba zrobic cos takiego ze bierze sie dlugosc rzedu i podaje id bloku do funkcji ktora bedzie zwracala
-    w ktorym rzedzie lezy aby moc przerobic te ulomne ify z liczbami
-
-*/
 window.addEventListener("contextmenu", e => e.preventDefault()); //usuwa content menu
 let blocks = document.querySelectorAll('#square');
 let columns = Math.sqrt(blocks.length); //! jezeli to bedzie podawane przez gracza to musi byc to zmienione jesli plansza moze byc protokatna
 let rows = blocks.length / columns; //! to tez
 let blocksLength = blocks.length;
 let bombs = new Array();//bombs ma indeksy kafelek z bombami
-let amount = 0;
+let amount = 0; //ile bomb wygenerowalo
 let bombsLeft = 15;
-let toDraw = [[], []];
 let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
 let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
-let whichToShow = [];
+let whichToShow = [[], []];
 function Counter() {
     const timeDisplay = document.querySelector('#czas');
     let time = Number(0);
@@ -48,9 +39,7 @@ function LeftClick() {
     Counter(); // Tutaj zaczyna sie odliczanie czasu
     CheckInside();
     ShowContent(event.target.blockID);
-    SeeEmpty(event.target.blockID);
-    //sprawdzSasiadow2(event.target.blockID);
-    // CheckEmpty(event.target.blockID);
+    ShowEmptyArround(event.target.blockID)
 }
 function CreateBombs(clicked) {
     let blockToCheck = Number(clicked);
@@ -201,6 +190,61 @@ function CheckInside() {
     }
     //console.log(blocks.blockValue)
 }
+function ShowEmptyArround(clicked) {
+    let row = RowNumber(clicked);
+    if (blocks[clicked].blockValue == 'empty') {
+        if (clicked != 0 && clicked != columns * row) {
+            if (blocks[clicked - 1].blockValue == 'empty') {
+                ShowContent(clicked - 1);
+            }
+            if (blocks[clicked - columns - 1].blockValue == 'empty') {
+                ShowContent(clicked - 1);
+            }
+            if (blocks[clicked + columns - 1].blockValue == 'empty') {
+                ShowContent(clicked - 1);
+            }
+        }
+        if (clicked != columns * row) {
+            if (blocks[clicked + 1].blockValue == 'empty') {
+                ShowContent(clicked + 1);
+            }
+            if (blocks[clicked + columns + 1].blockValue == 'empty') {
+                ShowContent(clicked + 1);
+            }
+            if (blocks[clicked - columns + 1].blockValue == 'empty') {
+                ShowContent(clicked + 1);
+            }
+        }
+        if (clicked <= rows * columns) {
+            if (blocks[clicked + columns].blockValue == 'empty') {
+                ShowContent(clicked + columns);
+            }
+            if (blocks[clicked + columns + 1].blockValue == 'empty') {
+                ShowContent(clicked + columns);
+            }
+            if (blocks[clicked + columns - 1].blockValue == 'empty') {
+                ShowContent(clicked + columns);
+            }
+        }
+        if (clicked > columns) {
+            if (blocks[clicked - columns].blockValue == 'empty') {
+                ShowContent(clicked - columns);
+            }
+            if (blocks[clicked - columns - 1].blockValue == 'empty') {
+                ShowContent(clicked - columns);
+            }
+            if (blocks[clicked - columns + 1].blockValue == 'empty') {
+                ShowContent(clicked - columns);
+            }
+        }
+    }
+    if (clicked >= 0) {
+        ShowEmptyArround(clicked - 1)
+    }
+    if (clicked <= rows * columns) {
+        ShowEmptyArround(clicked + 1)
+    }
+}
 function ShowContent(block) {
     // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     var checked = Number(block); // id kafelka wywolujacego cos tam
@@ -273,142 +317,4 @@ function EmptyArray() {
         }
     }
     return eptBlocks;
-}
-function SeeEmpty(toCheck) {
-    let whichRow = RowNumber(toCheck);
-    let toSend = toCheck
-    // tutaj przyjmuje ktory blok zostal wybrany; tworzy array pustych kafelkow
-    // ! poniżej ostra jazda bez trzymanki
-    if (blocks[toCheck].blockValue == 'empty') {
-        CheckRow(toCheck);
-        for (let i = whichRow - 1; whichRow > 0; i--) {
-            //wywolac funkcje ktora sprawdzi rzad wyzej
-            toSend = toSend - columns * i;
-            for (let j = 0; j < whichToShow.length; j++) {
-                let index = whichToShow[j] - columns;
-                if (blocks[index] == 'empty') {
-                    CheckRow(toSend);
-                }
-            }
-        }
-        for (let i = whichRow + 1; whichRow < rows; i++) {
-            //wywolac funkcje ktora sprawdzi rzad nizej
-            toSend = toSend + columns * i;
-            for (let j = 0; j < whichToShow.length; j++) {
-                let index = whichToShow[j] + columns;
-                if (blocks[index] == 'empty') {
-                    CheckRow(toSend);
-                }
-            }
-        }
-    }
-}
-function CheckRow(clickedBlock) {
-    let whichRow = RowNumber(clickedBlock);
-    let index = clickedBlock - (whichRow * columns); //aktualnie od 0 do 9
-    let repeats = false
-    for (let i = 0; i < whichToShow.length; i++) {
-        if (clickedBlock == whichToShow[i]) {
-            repeats = true;
-        }
-    }
-    if (repeats === false) {
-        whichToShow.push(clickedBlock);
-        if (index !== 0) {
-            for (let i = 1; i < index; i++) {
-                if (blocks[clickedBlock - i].blockValue == 'empty') {
-                    whichToShow.push(clickedBlock - i);
-                }
-                else {
-                    break;
-                }
-            }
-        }
-        if (index !== columns) {
-            for (let i = 1; i < columns - index; i++) {
-                if (blocks[clickedBlock + i].blockValue == 'empty') {
-                    whichToShow.push(clickedBlock + i);
-                }
-                else {
-                    break;
-                }
-            }
-        }
-    }
-    console.log(index);
-    console.log(clickedBlock);
-    console.table(whichToShow);
-}
-// ! nieuzywane funkcje
-function sprawdzSasiadow2(parametr) {
-    // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
-    var sprawdzany = Number(parametr); // id kafelka wywolujacego cos tam
-    let nalezyDoBomb = false
-    for (let j = 0; j < bombs.length; j++) {
-        if (sprawdzany == bombs[j]) {
-            nalezyDoBomb = true;
-        }
-        else {
-            continue;
-        }
-    }
-    if (nalezyDoBomb == false) {
-        let ileBomb = 0
-        for (let j = 0; j < bombs.length; j++) {
-            //lewa ścsprawdzanyana
-            if (sprawdzany == 0 || sprawdzany == 10 || sprawdzany == 20 || sprawdzany == 30 || sprawdzany == 40 || sprawdzany == 50 || sprawdzany == 60 || sprawdzany == 70 || sprawdzany == 80 || sprawdzany == 90) {
-                if (sprawdzany - 10 == bombs[j] || sprawdzany - 9 == bombs[j] || sprawdzany + 1 == bombs[j] || sprawdzany + 10 == bombs[j] || sprawdzany + 11 == bombs[j]) {
-                    ileBomb += 1;
-                }
-            }
-            else {
-                // prawa ścsprawdzanyana
-                if (sprawdzany == 9 || sprawdzany == 19 || sprawdzany == 29 || sprawdzany == 39 || sprawdzany == 49 || sprawdzany == 59 || sprawdzany == 69 || sprawdzany == 79 || sprawdzany == 89 || sprawdzany == 99) {
-                    if (sprawdzany - 11 == bombs[j] || sprawdzany - 10 == bombs[j] || sprawdzany - 1 == bombs[j] || sprawdzany + 9 == bombs[j] || sprawdzany + 10 == bombs[j]) {
-                        ileBomb += 1;
-                    }
-                }
-                //reszta
-                else {
-                    if (sprawdzany - 11 == bombs[j] || sprawdzany - 10 == bombs[j] || sprawdzany - 9 == bombs[j] || sprawdzany - 1 == bombs[j] ||
-                        sprawdzany + 1 == bombs[j] || sprawdzany + 9 == bombs[j] || sprawdzany + 10 == bombs[j] || sprawdzany + 11 == bombs[j]) {
-                        ileBomb += 1;
-                    }
-                }
-            }
-            if (ileBomb > 0) {
-                blocks[sprawdzany].innerHTML = ileBomb;
-                switch (ileBomb) {
-                    case 1:
-                        blocks[sprawdzany].style.color = "blue";
-                        break;
-                    case 2:
-                        blocks[sprawdzany].style.color = "green";
-                        break;
-                    case 3:
-                        blocks[sprawdzany].style.color = "red";
-                        break;
-                    case 4:
-                        blocks[sprawdzany].style.color = "purple";
-                        break;
-                    case 5:
-                        blocks[sprawdzany].style.color = "orange";
-                        break;
-                }
-            }
-            else {
-                continue
-            }
-        }
-    }
-    else {
-        blocks[sprawdzany].innerHTML = "<img src=\"grafika/bomba.png\">";
-        GameOver();
-    }
-}
-function drawBomby() {
-    for (let i = 0; i < bombs.length; i++) {
-        let wartosc = bombs[i];
-        blocks[wartosc].innerHTML = "<img src=\"grafika/bomba.png\">";
-    }
 }
