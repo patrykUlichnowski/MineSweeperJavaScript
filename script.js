@@ -231,7 +231,7 @@ function CheckNeighbourhood(x) {
             }
         }
     }
-    else if (clicked == (columns * row + 1) - 1) {//prawa strona
+    else if (clicked == (columns * (row + 1)) - 1) {//prawa strona
         if (clicked == columns - 1) { //prawy gorny rog
             if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                 ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
@@ -293,7 +293,7 @@ function CheckNeighbourhood(x) {
             }
         }
     }
-    else if (clicked <= (columns * rows) - 1 && clicked > (columns * rows) - columns - 1) { //dolny rzad
+    else if (clicked <= (columns * rows) - 1 && clicked >= (columns * rows) - columns) { //dolny rzad
         if (clicked == (rows * columns) - columns) { //lewy dolny rog
             if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                 ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
@@ -318,7 +318,7 @@ function CheckNeighbourhood(x) {
                 if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //po prawej
                     ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
                 }
-                if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//nad blokiem
+                if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) {//nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
                 }
             }
