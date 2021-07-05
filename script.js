@@ -193,20 +193,28 @@ function CheckInside() {
     }
     //console.log(blocks.blockValue)
 }
-function ShowEmptyArround(clicked) {
-    CheckNeighbourhood(clicked);
-    ShowContent(clicked);
+function ShowEmptyArround(clickedBlock) {
+    CheckNeighbourhood(clickedBlock);
+    ShowContent(clickedBlock);
+    console.log('wykonano');
 }
-function CheckNeighbourhood(x) {
-    let clicked = x;
+function CheckNeighbourhood(toCheck) {
+    // ! POD ZADNYM KURWA POZOREM TEGO NIE RUSZAC
+    let clicked = toCheck;
     let row = RowNumber(clicked);
     if (clicked == columns * row) { //lewa strona; jezeli rowna sie 10,20,30...
         if (clicked == 0) { // lewy gorny rog
             if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                 ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
             }
+            else {
+                ShowContent(clicked + columns);
+            }
             if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                 ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
+            }
+            else {
+                ShowContent(clicked + 1);
             }
         }
         else {
@@ -214,19 +222,34 @@ function CheckNeighbourhood(x) {
                 if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                     ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
                 }
+                else {
+                    ShowContent(clicked + 1);
+                }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
+                }
+                else {
+                    ShowContent(clicked - columns);
                 }
             }
             else { //reszta po lewej
                 if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                     ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
                 }
+                else {
+                    ShowContent(clicked + 1);
+                }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
                 }
+                else {
+                    ShowContent(clicked - columns);
+                }
                 if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                     ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
+                }
+                else {
+                    ShowContent(clicked + columns);
                 }
             }
         }
@@ -236,8 +259,14 @@ function CheckNeighbourhood(x) {
             if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                 ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
             }
+            else {
+                ShowContent(clicked + columns);
+            }
             if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                 ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
+            }
+            else {
+                ShowContent(clicked - 1);
             }
         }
         else {
@@ -245,19 +274,34 @@ function CheckNeighbourhood(x) {
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else {
+                    ShowContent(clicked - 1);
+                }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
+                }
+                else {
+                    ShowContent(clicked - columns);
                 }
             }
             else {
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else {
+                    ShowContent(clicked - 1);
+                }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
                 }
+                else {
+                    ShowContent(clicked - columns);
+                }
                 if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                     ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
+                }
+                else {
+                    ShowContent(clicked + columns);
                 }
             }
         }
@@ -267,29 +311,36 @@ function CheckNeighbourhood(x) {
             if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false && clicked != (rows * columns) - columns) {//pod blokiem
                 ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
             }
+            else { ShowContent(clicked + columns); }
             if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                 ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
             }
+            else { ShowContent(clicked + 1); }
         }
-        else { //reszta srodka
+        else {
             if (clicked == columns - 1) { //prawy gorny rog
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else { ShowContent(clicked - 1); }
                 if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                     ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
                 }
+                else { ShowContent(clicked + columns); }
             }
-            else {
+            else {//srodek
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else { ShowContent(clicked - 1); }
                 if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //po prawej
                     ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
                 }
+                else { ShowContent(clicked + 1); }
                 if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//pod blokiem
                     ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
                 }
+                else { ShowContent(clicked + columns); }
             }
         }
     }
@@ -298,29 +349,36 @@ function CheckNeighbourhood(x) {
             if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //prawo od bloku
                 ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
             }
+            else { ShowContent(clicked + 1); }
             if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                 ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
             }
+            else { ShowContent(clicked - columns); }
         }
         else {
             if (clicked == columns * rows - 1) { //prawy dolny rog
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else { ShowContent(clicked - 1); }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) { //nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
                 }
+                else { ShowContent(clicked - columns); }
             }
             else {
                 if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
                     ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
                 }
+                else { ShowContent(clicked - 1); }
                 if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //po prawej
                     ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
                 }
+                else { ShowContent(clicked + 1); }
                 if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) {//nad blokiem
                     ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
                 }
+                else { ShowContent(clicked - columns); }
             }
         }
     }
@@ -328,15 +386,19 @@ function CheckNeighbourhood(x) {
         if (blocks[clicked - 1].blockValue == 'empty' && blocks[clicked - 1].isOpen == false) {//lewo od bloku
             ShowContent(clicked - 1); CheckNeighbourhood(clicked - 1);
         }
+        else { ShowContent(clicked - 1); }
         if (blocks[clicked - columns].blockValue == 'empty' && blocks[clicked - columns].isOpen == false) {//lewo od bloku
             ShowContent(clicked - columns); CheckNeighbourhood(clicked - columns);
         }
+        else { ShowContent(clicked - columns); }
         if (blocks[clicked + 1].blockValue == 'empty' && blocks[clicked + 1].isOpen == false) { //po prawej
             ShowContent(clicked + 1); CheckNeighbourhood(clicked + 1);
         }
+        else { ShowContent(clicked + 1); }
         if (blocks[clicked + columns].blockValue == 'empty' && blocks[clicked + columns].isOpen == false) {//nad blokiem
             ShowContent(clicked + columns); CheckNeighbourhood(clicked + columns);
         }
+        else { ShowContent(clicked + columns); }
     }
 }
 function ShowContent(block) {
