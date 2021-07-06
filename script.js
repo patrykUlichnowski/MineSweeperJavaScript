@@ -534,14 +534,20 @@ function CheckForCorners() {
                 continue
             }
             //to dziala tylko dla srodkowych wartosci
-            else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
-                blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
-                if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
-                    || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
-                    || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
-                    || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
-                    ShowContent(checked);
-                }
+            // else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
+            //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
+            //     if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
+            //         || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
+            //         || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
+            //         || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
+            //         ShowContent(checked);
+            //     }
+            // }
+            else if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
+                || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
+                || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
+                || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
+                ShowContent(checked);
             }
         }
     }
