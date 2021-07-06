@@ -27,10 +27,11 @@ function WonGame() {
 function AddListeners() {
     for (var i = 0; i < blocks.length; i++) {
         document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+        blocks[i].blockID = i;
         blocks[i].addEventListener("click", LeftClick);
         blocks[i].addEventListener("contextmenu", Flag);
-        blocks[i].blockID = i;
         blocks[i].isOpen = false;
+        blocks[i].flagged = false;
     }
 }
 function LeftClick() {
@@ -407,6 +408,7 @@ function ShowContent(block) {
         var checked = Number(block); // id kafelka wywolujacego cos tam
         let inBombArray = false
         blocks[checked].style.backgroundColor = "grey";
+        blocks[checked].removeEventListener('contextmenu', Flag)
         for (let j = 0; j < bombs.length; j++) {
             if (checked == bombs[j]) {
                 inBombArray = true;
@@ -464,19 +466,24 @@ function GameOver() {
     alert("Game over!");
     location.reload();
 }
+function Restart() {
+    location.reload();
+}
 function RowNumber(blockNumber) {
     return parseInt(blockNumber / rows);
 }
 function Flag() {
     var clicked = event.target.blockID;
-    blocks[clicked].innerHTML = "<img src=\"grafika/flaga.png\">";
-}
-function EmptyArray() {
-    let eptBlocks = [];
-    for (let i = 0; i < blocksLength; i++) {
-        if (blocks[i].blockValue == 'empty') {
-            eptBlocks.push(i);
-        }
+    console.log(clicked);
+    if (blocks[clicked].flagged == false) {
+        console.log('a');
+        blocks[clicked].innerHTML = "<img src=\"grafika/flaga.png\">";
+        blocks[clicked].removeEventListener('click', LeftClick);
+        blocks[clicked].flagged = true;
+    } else {
+        blocks[clicked].innerHTML = "";
+        console.log('b');
+        blocks[clicked].addEventListener('click', LeftClick);
+        blocks[clicked].flagged = false;
     }
-    return eptBlocks;
 }
