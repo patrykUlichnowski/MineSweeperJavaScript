@@ -25,18 +25,18 @@ function WonGame() {
     clearInterval(timer);
 }
 function AddListeners() {
+    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
     for (var i = 0; i < blocks.length; i++) {
-        document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
         blocks[i].blockID = i;
         blocks[i].addEventListener("click", LeftClick);
-        blocks[i].addEventListener("contextmenu", Flag);
+        blocks[i].addEventListener("contextmenu", RightClick);
         blocks[i].isOpen = false;
         blocks[i].flagged = false;
     }
 }
 function LeftClick() {
     var clicked = event.target.blockID
-    blocks[clicked].removeEventListener('contextmenu', Flag)
+    blocks[clicked].removeEventListener('contextmenu', RightClick)
     CreateBombs(event.target.blockID);
     Counter(); // Tutaj zaczyna sie odliczanie czasu
     CheckInside();
@@ -44,6 +44,17 @@ function LeftClick() {
         ShowContent(event.target.blockID);
     }
     else if (event.target.blockValue == 'empty' && event.target.isOpen == false) { ShowEmptyArround(event.target.blockID) }
+}
+function RightClick() {
+    var clicked = event.target.blockID
+    if (blocks[clicked].flagged === false) {
+        blocks[clicked].removeEventListener('click', LeftClick)
+        Flag()
+    }
+    else {
+        blocks[clicked].addEventListener('click', LeftClick)
+        RemoveFlag()
+    }
 }
 function CreateBombs(clicked) {
     let blockToCheck = Number(clicked);
@@ -408,7 +419,7 @@ function ShowContent(block) {
         var checked = Number(block); // id kafelka wywolujacego cos tam
         let inBombArray = false
         blocks[checked].style.backgroundColor = "grey";
-        blocks[checked].removeEventListener('contextmenu', Flag)
+        blocks[checked].removeEventListener('contextmenu', RightClick)
         for (let j = 0; j < bombs.length; j++) {
             if (checked == bombs[j]) {
                 inBombArray = true;
@@ -475,15 +486,14 @@ function RowNumber(blockNumber) {
 function Flag() {
     var clicked = event.target.blockID;
     console.log(clicked);
-    if (blocks[clicked].flagged == false) {
-        console.log('a');
-        blocks[clicked].innerHTML = "<img src=\"grafika/flaga.png\">";
-        blocks[clicked].removeEventListener('click', LeftClick);
-        blocks[clicked].flagged = true;
-    } else {
-        blocks[clicked].innerHTML = "";
-        console.log('b');
-        blocks[clicked].addEventListener('click', LeftClick);
-        blocks[clicked].flagged = false;
-    }
+    console.log('a');
+    blocks[clicked].style.backgroundColor = "green";
+    blocks[clicked].flagged = true;
+}
+function RemoveFlag() {
+    var clicked = event.target.blockID;
+    blocks[clicked].innerHTML = "";
+    console.log('b');
+    blocks[clicked].style.backgroundColor = "rgb(54, 54, 54)";
+    blocks[clicked].flagged = false;
 }
