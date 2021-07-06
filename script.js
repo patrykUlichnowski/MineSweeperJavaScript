@@ -208,6 +208,7 @@ function CheckInside() {
 function ShowEmptyArround(clickedBlock) {
     CheckNeighbourhood(clickedBlock);
     ShowContent(clickedBlock);
+    CheckForCorners();
     console.log('wykonano');
 }
 function CheckNeighbourhood(toCheck) {
@@ -496,4 +497,52 @@ function RemoveFlag() {
     console.log('b');
     blocks[clicked].style.backgroundColor = "rgb(54, 54, 54)";
     blocks[clicked].flagged = false;
+}
+//! a jakby tak napisac funkcje ktora wezmie se klocka i sprawdzi czy ktorys z jego rogow nie jest pusty?
+function CheckForCorners() {
+    for (let i = 0; i < blocksLength; i++) {
+        let checked = blocks[i].blockID; // bedzie sprawdzane od razu dla kazdego ktory nie jest pusty i jest nie otwarty
+        if (blocks[checked].blockValue != 'empty' && blocks[checked].blockValue != 'bomb' && blocks[checked].isOpen == false) { //zeby tylko dla pelnych i nieotwartych
+            let row = RowNumber(checked);
+            //LEWA STRONA
+            if (checked == columns * row) {
+                // if (checked == 0) {
+                //     continue;
+                // }
+                // else if (clicked == (rows * columns) - columns) {
+                //     continue;
+                // }
+                // else if (blocks[checked + 1].blockValue != 'empty' &&
+                //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
+                //     if (blocks[checked - columns - 1].isOpen == true || blocks[checked - columns + 1].isOpen == true ||
+                //         blocks[checked - columns - 1].isOpen == true || blocks[checked + columns + 1].isOpen == true) {//sprawdza po skosach czy sa otwarte
+                //         ShowContent(checked);
+                //     }
+                // }
+                continue
+            }
+            //PRAWA STRONA
+            else if (checked == (columns * (row + 1)) - 1) {
+                continue
+            }
+            //GORA
+            else if (checked < columns) {
+                continue
+            }
+            // DÓŁ
+            else if (checked <= (columns * rows) - 1 && checked >= (columns * rows) - columns) {
+                continue
+            }
+            //to dziala tylko dla srodkowych wartosci
+            else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
+                blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
+                if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
+                    || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
+                    || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
+                    || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
+                    ShowContent(checked);
+                }
+            }
+        }
+    }
 }
