@@ -11,135 +11,142 @@
 </head>
 
 <body onload="AddListeners()">
-    <div class="flexwrap">
-        <span id='ilebomb'></span>
-        <span id='czas'><img src="grafika/clock.svg" alt="">0</span>
+    <div class='up'>
+        <div class="flexwrap">
+            <div id='ilebomb'></div>
+            <div id='czas' class="time">
+                <!-- <img src="grafika/clock.svg" alt=""> -->
+                Time: 0
+            </div>
+            <button onclick="Restart()" class='resetB'>RESET</button>
+        </div>
     </div>
-    <button onclick="Restart()">RESET</button>
-    <div class='plansza'>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-        </div>
-        <div class='rzad'>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
-            <div class='kafelek' id='square'></div>
+    <div class='game'>
+        <div class='plansza'>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
+            <div class='rzad'>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+                <div class='kafelek' id='square'></div>
+            </div>
         </div>
     </div>
     <footer>
-        made by Patryk Ulichnowski & Mateusz Sodolski
+        made by Patryk Ulichnowski
     </footer>
 </body>
 

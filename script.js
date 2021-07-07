@@ -10,26 +10,8 @@ let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wy
 let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
 let flaggedBlocks = [];
 let gameTime = 0;
-function Counter() {
-    const timeDisplay = document.querySelector('#czas');
-    let time = Number(0);
-    if (lock === false) {
-        timer = setInterval(() => {
-            time++;
-            gameTime++;
-            timeDisplay.innerHTML = `<img src="grafika/clock.svg" alt="">${time}`
-            lock = true;
-        }, 1000);
-    }
-}
-function WonGame() {
-    //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
-    clearInterval(timer);
-    alert("Congratulations you won! Your time: " + String(gameTime))
-    location.reload();
-}
 function AddListeners() {
-    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+    document.getElementById('ilebomb').innerHTML = "Bombs left: " + String(bombsLeft);
     for (var i = 0; i < blocks.length; i++) {
         blocks[i].blockID = i;
         blocks[i].addEventListener("click", LeftClick);
@@ -37,6 +19,28 @@ function AddListeners() {
         blocks[i].isOpen = false;
         blocks[i].flagged = false;
     }
+}
+function Counter() {
+    const timeDisplay = document.querySelector('#czas');
+    let time = Number(0);
+    if (lock === false) {
+        timer = setInterval(() => {
+            time++;
+            gameTime++;
+            timeDisplay.innerHTML = `Time: ${time}`
+            lock = true;
+        }, 1000);
+    }
+}
+function WonGame() {
+    //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
+    clearInterval(timer);
+    for (var i = 0; i < blocks.length; i++) {
+        blocks[i].removeEventListener("click", LeftClick);
+        blocks[i].removeEventListener("contextmenu", RightClick);
+    }
+    alert("Congratulations you won! Your time: " + String(gameTime) + ' seconds')
+    // location.reload();
 }
 function LeftClick() {
     var clicked = event.target.blockID
@@ -158,8 +162,13 @@ function CreateBombs(clicked) {
     //drawBomby();
 }
 function GameOver() {
+    clearInterval(timer);
+    for (var i = 0; i < blocks.length; i++) {
+        blocks[i].removeEventListener("click", LeftClick);
+        blocks[i].removeEventListener("contextmenu", RightClick);
+    }
     alert("Game over!");
-    location.reload();
+    // location.reload();
 }
 function Restart() {
     location.reload();
@@ -173,7 +182,7 @@ function Flag() {
     blocks[clicked].flagged = true;
     flaggedBlocks.push(clicked)
     bombsLeft--;
-    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+    document.getElementById('ilebomb').innerHTML = "Bombs left: " + String(bombsLeft);
     CheckScore()
 }
 function RemoveFlag() {
@@ -181,7 +190,7 @@ function RemoveFlag() {
     blocks[clicked].style.backgroundColor = "rgb(54, 54, 54)";
     blocks[clicked].flagged = false;
     bombsLeft++;
-    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+    document.getElementById('ilebomb').innerHTML = "Bombs left: " + String(bombsLeft);
     flaggedBlocks.pop(clicked)
 }
 function CheckScore() {
@@ -525,7 +534,7 @@ function ShowContent(block) {
     if (blocks[block].isOpen == false) {
         var checked = Number(block); // id kafelka wywolujacego cos tam
         let inBombArray = false
-        blocks[checked].style.backgroundColor = "grey";
+        blocks[checked].style.backgroundColor = "rgb(184, 183, 183)";
         blocks[checked].removeEventListener('contextmenu', RightClick)
         for (let j = 0; j < bombs.length; j++) {
             if (checked == bombs[j]) {
@@ -568,7 +577,7 @@ function ShowContent(block) {
                 blocks[block].isOpen = true;
             }
             else {
-                blocks[checked].style.backgroundColor = "grey";
+                blocks[checked].style.backgroundColor = "rgb(184, 183, 183)";
                 blocks[block].isOpen = true;
                 // ShowEmptyArround(checked);
             }
