@@ -7,7 +7,7 @@ let bombs = [];//bombs ma indeksy kafelek z bombami
 let amount = 0; //ile bomb wygenerowalo
 let bombsLeft = 15;
 let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
-let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
+let lock = false; //zeby sie nasluchiwacze nie nałożyły
 let flaggedBlocks = [];
 let gameTime = 0;
 function AddListeners() {
@@ -33,14 +33,12 @@ function Counter() {
     }
 }
 function WonGame() {
-    //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
     clearInterval(timer);
     for (var i = 0; i < blocks.length; i++) {
         blocks[i].removeEventListener("click", LeftClick);
         blocks[i].removeEventListener("contextmenu", RightClick);
     }
     alert("Congratulations you won! Your time: " + String(gameTime) + ' seconds')
-    // location.reload();
 }
 function LeftClick() {
     var clicked = event.target.blockID
@@ -158,8 +156,6 @@ function CreateBombs(clicked) {
             }
         }
     }
-    // petla nanoszaca grafiki
-    //drawBomby();
 }
 function GameOver() {
     clearInterval(timer);
@@ -168,7 +164,6 @@ function GameOver() {
         blocks[i].removeEventListener("contextmenu", RightClick);
     }
     alert("Game over!");
-    // location.reload();
 }
 function Restart() {
     location.reload();
@@ -248,17 +243,6 @@ function CheckForCorners() {
             else if (checked <= (columns * rows) - 1 && checked >= (columns * rows) - columns) {
                 continue
             }
-
-            // else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
-            //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
-            //     if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
-            //         || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
-            //         || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
-            //         || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
-            //         ShowContent(checked);
-            //     }
-            // }
-
             //to dziala tylko dla srodkowych wartosci
             else if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
                 || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
@@ -319,7 +303,6 @@ function CheckInside() {
             blocks[i].blockValue = 'bomb';
         }
     }
-    //console.log(blocks.blockValue)
 }
 function ShowEmptyArround(clickedBlock) {
     CheckNeighbourhood(clickedBlock);
@@ -327,7 +310,7 @@ function ShowEmptyArround(clickedBlock) {
     CheckForCorners();
 }
 function CheckNeighbourhood(toCheck) {
-    // ! POD ZADNYM KURWA POZOREM TEGO NIE RUSZAC
+    // ! ODSLANIA PUSTE KAFELKI/NAJWAZNIEJSZA FUNKCJA
     let clicked = toCheck;
     let row = RowNumber(clicked);
     if (clicked == columns * row) { //lewa strona; jezeli rowna sie 10,20,30...
@@ -530,7 +513,6 @@ function CheckNeighbourhood(toCheck) {
     }
 }
 function ShowContent(block) {
-    // tutaj zamiast i trzeba bedzie przyjmowac parametr ktorym bedzie indeks kliknietego kafelka
     if (blocks[block].isOpen == false) {
         var checked = Number(block); // id kafelka wywolujacego cos tam
         let inBombArray = false
@@ -579,7 +561,6 @@ function ShowContent(block) {
             else {
                 blocks[checked].style.backgroundColor = "rgb(184, 183, 183)";
                 blocks[block].isOpen = true;
-                // ShowEmptyArround(checked);
             }
         }
         else {
