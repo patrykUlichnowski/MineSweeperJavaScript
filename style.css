@@ -3,6 +3,7 @@ body{
     background-image: linear-gradient(to bottom,#222,grey);
     color: white;
     /* display: inline-block;     */
+    height: 100vh;
 }
 .up{
     display: flex;
@@ -25,11 +26,14 @@ body{
     width:100%;
     margin-top:2%;
     /* background: rgb(207, 206, 206); */
-    background-image: linear-gradient(to top,rgb(207, 206, 206),white);
+    background-image: linear-gradient(to top,white,rgb(207, 206, 206));
     width: 20vw;
     color:purple;
     justify-content: space-around;
-    border-radius: 1em;
+    border-radius: 1em 1em 0 0;
+    z-index: 2;
+    box-shadow: 0 -1.4em 1em 0.5em black;
+
 }
 .time{
     color:red;
@@ -60,26 +64,38 @@ body{
     align-items: center;
     box-shadow: 0 0 0 0.1em black;
 }
+.kafelek:hover{
+    background: rgb(97, 96, 96);
+}
 .plansza{
+    z-index: 1;
     display: inline-block;
     background-color: white;
     background-size: inherit;
     justify-content: center;
     padding: 10px;
-    margin: auto;
-    margin-top: 3em;
+    border-radius: 0.5em;
+    box-shadow: 0 0 1em 1em black;
 }
 .rzad{
     display: flex;
 }
 footer{
-    height: 7vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: auto;
     font-size: 2rem;
     text-align: center;
     position: fixed;
-    background: grey; 
+    /* background: grey;  */
     color: white;
     margin: 0 0 0 0;
-    bottom: 0;
     width: 100vw;
+}
+footer > p{
+    margin-bottom: 0;
+}
+.resetB:hover{
+    background: rgb(4, 1, 180);
 }
