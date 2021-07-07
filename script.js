@@ -3,18 +3,20 @@ let blocks = document.querySelectorAll('#square');
 let columns = Math.sqrt(blocks.length); //! jezeli to bedzie podawane przez gracza to musi byc to zmienione jesli plansza moze byc protokatna
 let rows = blocks.length / columns; //! to tez
 let blocksLength = blocks.length;
-let bombs = new Array();//bombs ma indeksy kafelek z bombami
+let bombs = [];//bombs ma indeksy kafelek z bombami
 let amount = 0; //ile bomb wygenerowalo
 let bombsLeft = 15;
 let timer; // Musze to zadeklarowac aby nadac zmienna intervalowi by potem to wyczyscic
 let lock = false; //Oczywiscie kurwa musza sie nasluchiwacze nalozyc
-let whichToShow = [[], []];
+let flaggedBlocks = [];
+let gameTime = 0;
 function Counter() {
     const timeDisplay = document.querySelector('#czas');
     let time = Number(0);
     if (lock === false) {
         timer = setInterval(() => {
-            time++
+            time++;
+            gameTime++;
             timeDisplay.innerHTML = `<img src="grafika/clock.svg" alt="">${time}`
             lock = true;
         }, 1000);
@@ -23,6 +25,8 @@ function Counter() {
 function WonGame() {
     //Sraken pierdaken jak zrobisz funkcje po wygraniu gry to dodaj to co jest pod tym
     clearInterval(timer);
+    alert("Congratulations you won! Your time: " + String(gameTime))
+    location.reload();
 }
 function AddListeners() {
     document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
@@ -153,6 +157,109 @@ function CreateBombs(clicked) {
     // petla nanoszaca grafiki
     //drawBomby();
 }
+function GameOver() {
+    alert("Game over!");
+    location.reload();
+}
+function Restart() {
+    location.reload();
+}
+function RowNumber(blockNumber) {
+    return parseInt(blockNumber / rows);
+}
+function Flag() {
+    var clicked = event.target.blockID;
+    blocks[clicked].style.backgroundColor = "green";
+    blocks[clicked].flagged = true;
+    flaggedBlocks.push(clicked)
+    bombsLeft--;
+    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+    CheckScore()
+}
+function RemoveFlag() {
+    var clicked = event.target.blockID;
+    blocks[clicked].style.backgroundColor = "rgb(54, 54, 54)";
+    blocks[clicked].flagged = false;
+    bombsLeft++;
+    document.getElementById('ilebomb').innerHTML = '<img src="grafika/bomba.png"> left: ' + String(bombsLeft);
+    flaggedBlocks.pop(clicked)
+}
+function CheckScore() {
+    let howmany = 0;
+    if (flaggedBlocks.length == bombs.length) {
+        for (let i = 0; i < bombs.length; i++) {
+            for (let j = 0; j < flaggedBlocks.length; j++) {
+                if (flaggedBlocks[j] == bombs[i]) {
+                    howmany++;
+                }
+                else {
+                    continue
+                }
+            }
+        }
+        if (howmany == bombs.length) {
+            WonGame()
+        }
+        else {
+            GameOver()
+        }
+    }
+}
+function CheckForCorners() {
+    for (let i = 0; i < blocksLength; i++) {
+        let checked = blocks[i].blockID; // bedzie sprawdzane od razu dla kazdego ktory nie jest pusty i jest nie otwarty
+        if (blocks[checked].blockValue != 'empty' && blocks[checked].blockValue != 'bomb' && blocks[checked].isOpen == false) { //zeby tylko dla pelnych i nieotwartych
+            let row = RowNumber(checked);
+            //LEWA STRONA
+            if (checked == columns * row) {
+                // if (checked == 0) {
+                //     continue;
+                // }
+                // else if (clicked == (rows * columns) - columns) {
+                //     continue;
+                // }
+                // else if (blocks[checked + 1].blockValue != 'empty' &&
+                //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
+                //     if (blocks[checked - columns - 1].isOpen == true || blocks[checked - columns + 1].isOpen == true ||
+                //         blocks[checked - columns - 1].isOpen == true || blocks[checked + columns + 1].isOpen == true) {//sprawdza po skosach czy sa otwarte
+                //         ShowContent(checked);
+                //     }
+                // }
+                continue
+            }
+            //PRAWA STRONA
+            else if (checked == (columns * (row + 1)) - 1) {
+                continue
+            }
+            //GORA
+            else if (checked < columns) {
+                continue
+            }
+            // DÓŁ
+            else if (checked <= (columns * rows) - 1 && checked >= (columns * rows) - columns) {
+                continue
+            }
+
+            // else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
+            //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
+            //     if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
+            //         || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
+            //         || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
+            //         || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
+            //         ShowContent(checked);
+            //     }
+            // }
+
+            //to dziala tylko dla srodkowych wartosci
+            else if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
+                || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
+                || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
+                || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
+                ShowContent(checked);
+            }
+        }
+    }
+}
 function CheckInside() {
     // ! sprawdza zawartosc bloku i dodaje mu wartosc
     for (let i = 0; i < blocksLength; i++) {
@@ -209,7 +316,6 @@ function ShowEmptyArround(clickedBlock) {
     CheckNeighbourhood(clickedBlock);
     ShowContent(clickedBlock);
     CheckForCorners();
-    console.log('wykonano');
 }
 function CheckNeighbourhood(toCheck) {
     // ! POD ZADNYM KURWA POZOREM TEGO NIE RUSZAC
@@ -471,84 +577,6 @@ function ShowContent(block) {
             blocks[checked].innerHTML = "<img src=\"grafika/bomba.png\">";
             blocks[block].isOpen = true;
             GameOver();
-        }
-    }
-}
-function GameOver() {
-    alert("Game over!");
-    location.reload();
-}
-function Restart() {
-    location.reload();
-}
-function RowNumber(blockNumber) {
-    return parseInt(blockNumber / rows);
-}
-function Flag() {
-    var clicked = event.target.blockID;
-    console.log(clicked);
-    console.log('a');
-    blocks[clicked].style.backgroundColor = "green";
-    blocks[clicked].flagged = true;
-}
-function RemoveFlag() {
-    var clicked = event.target.blockID;
-    blocks[clicked].innerHTML = "";
-    console.log('b');
-    blocks[clicked].style.backgroundColor = "rgb(54, 54, 54)";
-    blocks[clicked].flagged = false;
-}
-//! a jakby tak napisac funkcje ktora wezmie se klocka i sprawdzi czy ktorys z jego rogow nie jest pusty?
-function CheckForCorners() {
-    for (let i = 0; i < blocksLength; i++) {
-        let checked = blocks[i].blockID; // bedzie sprawdzane od razu dla kazdego ktory nie jest pusty i jest nie otwarty
-        if (blocks[checked].blockValue != 'empty' && blocks[checked].blockValue != 'bomb' && blocks[checked].isOpen == false) { //zeby tylko dla pelnych i nieotwartych
-            let row = RowNumber(checked);
-            //LEWA STRONA
-            if (checked == columns * row) {
-                // if (checked == 0) {
-                //     continue;
-                // }
-                // else if (clicked == (rows * columns) - columns) {
-                //     continue;
-                // }
-                // else if (blocks[checked + 1].blockValue != 'empty' &&
-                //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
-                //     if (blocks[checked - columns - 1].isOpen == true || blocks[checked - columns + 1].isOpen == true ||
-                //         blocks[checked - columns - 1].isOpen == true || blocks[checked + columns + 1].isOpen == true) {//sprawdza po skosach czy sa otwarte
-                //         ShowContent(checked);
-                //     }
-                // }
-                continue
-            }
-            //PRAWA STRONA
-            else if (checked == (columns * (row + 1)) - 1) {
-                continue
-            }
-            //GORA
-            else if (checked < columns) {
-                continue
-            }
-            // DÓŁ
-            else if (checked <= (columns * rows) - 1 && checked >= (columns * rows) - columns) {
-                continue
-            }
-            //to dziala tylko dla srodkowych wartosci
-            // else if (blocks[checked - 1].blockValue != 'empty' && blocks[checked + 1].blockValue != 'empty' &&
-            //     blocks[checked - columns].blockValue != 'empty' && blocks[checked + columns].blockValue != 'empty') { //sprawdza czy ma pelnych sasiadow
-            //     if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
-            //         || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
-            //         || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
-            //         || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
-            //         ShowContent(checked);
-            //     }
-            // }
-            else if ((blocks[checked - columns - 1].isOpen == true && blocks[checked - columns - 1].blockValue == 'empty')
-                || (blocks[checked - columns + 1].isOpen == true && blocks[checked - columns + 1].blockValue == 'empty')
-                || (blocks[checked + columns - 1].isOpen == true && blocks[checked + columns - 1].blockValue == 'empty')
-                || (blocks[checked + columns + 1].isOpen == true && blocks[checked + columns + 1].blockValue == 'empty')) {//sprawdza po skosach czy sa otwarte
-                ShowContent(checked);
-            }
         }
     }
 }
